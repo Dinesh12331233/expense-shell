@@ -46,8 +46,14 @@ VALIDATE $? "Enabling Nodejs 20"
 dnf install nodejs -y &>>$LOG_FILE_NAME
 VALIDATE $? "Installing NodaJS"
 
-useradd expense &>>$LOG_FILE_NAME
-VALIDATE $? "creating expense user"
+id expense &>>$LOG_FILE_NAME
+if [ $? -ne 0 ]
+then
+    useradd expense &>>$LOG_FILE_NAME
+    VALIDATE $? "creating expense user"
+else 
+    echo -e "expense user already exists....$Y SKIPPING $N"
+fi         
 
 mkdir /app &>>$LOG_FILE_NAME
 VALIDATE $? "creating app directory"
@@ -81,4 +87,5 @@ VALIDATE $? "Enabling backend"
 
 systemctl start backend &>>$LOG_FILE_NAME
 VALIDATE $? "Starting backend"
+
 
